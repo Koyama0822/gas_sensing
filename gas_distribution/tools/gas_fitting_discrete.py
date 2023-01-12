@@ -37,9 +37,9 @@ int8[] data
 # python parsing
 parser = argparse.ArgumentParser() 
 parser.add_argument('--bagfile', type=str)
-parser.add_argument('--model_size', type=int, default=100)
-parser.add_argument('--offset_x', type=int, default=25)
-parser.add_argument('--offset_y', type=int, default=25) 
+parser.add_argument('--model_size', type=int, default=50)
+parser.add_argument('--offset_x', type=int, default=0)
+parser.add_argument('--offset_y', type=int, default=0) 
 args = parser.parse_args()
 
 # load bagfile
@@ -69,7 +69,6 @@ for topic, msg, t in bag.read_messages():
         
 
 
-
 np.set_printoptions(threshold=10000000, linewidth=300)
 
 # careate an extended map
@@ -77,10 +76,21 @@ map = np.zeros((args.model_size, args.model_size))
 map[args.offset_y:offset_y+height,offset_x:offset_x+width] = raw_map
 
 # modify boundary
-map[0]=-1
-map[-1]=-1
-map[:,0]=-1
-map[:,-1]=-1
+
+# circle boundary
+c = [25, 25]
+r = 15
+for theta in range(360):
+    x = c[0] + r * np.cos(theta / 180.0 * np.pi)
+    y = c[1] + r * np.sin(theta / 180.0 * np.pi)
+    print(theta, x,y)
+    map[int(x), int(y)] = -1
+
+    
+# map[0]=-1
+# map[-1]=-1
+# map[:,0]=-1
+# map[:,-1]=-1
 
 # create meshgrid
 d = np.array(range(args.model_size))
