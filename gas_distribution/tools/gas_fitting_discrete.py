@@ -66,7 +66,6 @@ for topic, msg, t in bag.read_messages():
             origin = msg.info.origin
 
         raw_map = np.array(list(msg.data)).reshape(width, height)
-        print(t)
         
 
 
